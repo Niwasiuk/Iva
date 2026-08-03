@@ -133,3 +133,61 @@ export async function deleteGalleryImage(id: string) {
   revalidatePath("/galeria");
   revalidatePath("/admin/dashboard");
 }
+
+export async function createTestimonial(formData: FormData) {
+  const supabase = await createClient();
+
+  const name = String(formData.get("name") || "");
+  const city = String(formData.get("city") || "");
+  const text = String(formData.get("text") || "");
+  const imageFile = formData.get("image") as File | null;
+
+  if (!imageFile || imageFile.size === 0) {
+    redirect("/admin/dashboard/novo-depoimento?error=no-file");
+  }
+
+  const fileName = `${Date.now()}-${slugify(imageFile.name)}`;
+  const { data, error } = await supabase.storage
+    .from("testimonials")
+    .upload(fileName, imageFile);
+
+  if (error || !data) {
+    console.error("Testimonial upload error:", error);
+    redirect(
+      `/admin/dashboard/novo-depoimento?error=upload-failed&detail=${encodeURIComponent(
+        error?.message || "unknown"
+      )}`
+    );
+  }
+
+  const { data: publicUrl } = supabase.storage
+    .from("testimonials")
+    .getPublicUrl(data.path);
+
+  const { error: insertError } = await supabase.from("testimonials").insert({
+    image_url: publicUrl.publicUrl,
+    name,
+    city,
+    text,
+  });
+
+  if (insertError) {
+    console.error("Testimonial insert error:", insertError);
+    redirect(
+      `/admin/dashboard/novo-depoimento?error=insert-failed&detail=${encodeURIComponent(
+        insertError.message
+      )}`
+    );
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin/dashboard");
+  redirect("/admin/dashboard");
+}
+
+export async function deleteTestimonial(id: string) {
+  const supabase = await createClient();
+  await supabase.from("testimonials").delete().eq("id", id);
+  revalidatePath("/");
+  revalidatePath("/admin/dashboard");
+}

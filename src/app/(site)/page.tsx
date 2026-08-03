@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
-import type { Post } from "@/lib/types";
+import type { Post, Testimonial } from "@/lib/types";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -12,7 +12,14 @@ export default async function Home() {
     .order("created_at", { ascending: false })
     .limit(3);
 
+  const { data: testimonials } = await supabase
+    .from("testimonials")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(6);
+
   const latestPosts = (posts as Post[]) || [];
+  const allTestimonials = (testimonials as Testimonial[]) || [];
 
   return (
     <>
@@ -161,6 +168,39 @@ export default async function Home() {
           )}
         </div>
       </section>
+
+      {/* DEPOIMENTOS */}
+      {allTestimonials.length > 0 && (
+        <section className="max-w-content mx-auto px-6 md:px-10 py-24">
+          <p className="text-xs uppercase tracking-widest2 text-gold mb-4 text-center">
+            O que dizem
+          </p>
+          <h2 className="font-display text-4xl mb-16 text-center">
+            Depoimentos
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-10">
+            {allTestimonials.map((t) => (
+              <div key={t.id} className="flex flex-col items-center text-center">
+                <div className="relative w-24 h-24 rounded-full overflow-hidden border border-ink/10 mb-5">
+                  <Image
+                    src={t.image_url}
+                    alt={`${t.name} com Ivanna Wasiuk`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <p className="font-display italic text-lg leading-relaxed text-ink/90">
+                  &ldquo;{t.text}&rdquo;
+                </p>
+                <p className="mt-5 text-sm uppercase tracking-widest2 text-stone">
+                  {t.name} · {t.city}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* CTA FINAL */}
       <section className="max-w-content mx-auto px-6 md:px-10 py-28 text-center">

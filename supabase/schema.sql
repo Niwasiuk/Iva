@@ -67,9 +67,10 @@ create policy "Usuários autenticados podem excluir fotos"
   using (true);
 
 -- STORAGE BUCKETS
--- Crie estes dois buckets manualmente em Storage (ou rode via API/painel):
+-- Crie estes três buckets manualmente em Storage (ou rode via API/painel):
 --   1) "blog-covers"  -> público
 --   2) "gallery"      -> público
+--   3) "testimonials" -> público
 --
 -- Depois de criar os buckets, rode as policies abaixo (ajuste o nome do bucket
 -- em cada bloco se necessário):
@@ -96,3 +97,43 @@ create policy "Exclusão autenticada gallery"
   on storage.objects for delete
   to authenticated
   using (bucket_id = 'gallery');
+
+-- TESTEMUNHOS (DEPOIMENTOS)
+create table if not exists testimonials (
+  id uuid primary key default uuid_generate_v4(),
+  image_url text not null,
+  name text not null,
+  city text not null,
+  text text not null,
+  created_at timestamptz default now()
+);
+
+alter table testimonials enable row level security;
+
+create policy "Depoimentos são públicos"
+  on testimonials for select
+  using (true);
+
+create policy "Usuários autenticados podem inserir depoimentos"
+  on testimonials for insert
+  to authenticated
+  with check (true);
+
+create policy "Usuários autenticados podem excluir depoimentos"
+  on testimonials for delete
+  to authenticated
+  using (true);
+
+create policy "Leitura pública testimonials"
+  on storage.objects for select
+  using (bucket_id = 'testimonials');
+
+create policy "Upload autenticado testimonials"
+  on storage.objects for insert
+  to authenticated
+  with check (bucket_id = 'testimonials');
+
+create policy "Exclusão autenticada testimonials"
+  on storage.objects for delete
+  to authenticated
+  using (bucket_id = 'testimonials');

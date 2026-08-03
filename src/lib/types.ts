@@ -17,3 +17,12 @@ export type GalleryImage = {
   size: "sm" | "md" | "lg";
   created_at: string;
 };
+
+export type Testimonial = {
+  id: string;
+  image_url: string;
+  name: string;
+  city: string;
+  text: string;
+  created_at: string;
+};
