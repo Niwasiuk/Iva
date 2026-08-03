@@ -1,15 +1,8 @@
-import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import type { GalleryImage } from "@/lib/types";
 
 export const metadata = { title: "Galeria — Ivanna Wasiuk do Canto" };
 export const revalidate = 60;
-
-const SIZE_CLASSES: Record<string, string> = {
-  sm: "md:row-span-1",
-  md: "md:row-span-2",
-  lg: "md:row-span-3",
-};
 
 export default async function Galeria() {
   const supabase = await createClient();
@@ -36,19 +29,18 @@ export default async function Galeria() {
       {gallery.length === 0 ? (
         <p className="text-stone">Galeria em construção.</p>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[140px] md:auto-rows-[110px] gap-4">
+        <div className="columns-2 md:columns-3 lg:columns-4 gap-4">
           {gallery.map((img) => (
             <div
               key={img.id}
-              className={`relative border border-ink/10 overflow-hidden group row-span-2 ${
-                SIZE_CLASSES[img.size] || "md:row-span-2"
-              }`}
+              className="relative border border-ink/10 overflow-hidden group mb-4 break-inside-avoid"
             >
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={img.image_url}
                 alt={img.caption || "Referência de estilo"}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-auto block group-hover:scale-105 transition-transform duration-500"
+                loading="lazy"
               />
               {img.caption && (
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/70 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity">

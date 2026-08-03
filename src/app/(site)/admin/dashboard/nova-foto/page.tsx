@@ -61,21 +61,6 @@ export default async function NovaFoto({
           />
         </div>
 
-        <div>
-          <label className="block text-xs uppercase tracking-widest2 text-stone mb-2">
-            Tamanho no moodboard
-          </label>
-          <select
-            name="size"
-            className="w-full border border-ink/20 bg-paper px-4 py-3 focus-ring focus:outline-none"
-            defaultValue="md"
-          >
-            <option value="sm">Pequeno</option>
-            <option value="md">Médio</option>
-            <option value="lg">Grande</option>
-          </select>
-        </div>
-
         <button
           type="submit"
           className="bg-ink text-cream px-8 py-3 text-sm uppercase tracking-widest2 hover:bg-gold hover:text-ink transition-colors focus-ring"
