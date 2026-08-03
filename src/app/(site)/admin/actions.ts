@@ -95,18 +95,32 @@ export async function createGalleryImage(formData: FormData) {
     .upload(fileName, imageFile);
 
   if (error || !data) {
-    redirect("/admin/dashboard/nova-foto?error=upload-failed");
+    console.error("Gallery upload error:", error);
+    redirect(
+      `/admin/dashboard/nova-foto?error=upload-failed&detail=${encodeURIComponent(
+        error?.message || "unknown"
+      )}`
+    );
   }
 
   const { data: publicUrl } = supabase.storage
     .from("gallery")
     .getPublicUrl(data.path);
 
-  await supabase.from("gallery_images").insert({
+  const { error: insertError } = await supabase.from("gallery_images").insert({
     image_url: publicUrl.publicUrl,
     caption,
     size,
   });
+
+  if (insertError) {
+    console.error("Gallery insert error:", insertError);
+    redirect(
+      `/admin/dashboard/nova-foto?error=insert-failed&detail=${encodeURIComponent(
+        insertError.message
+      )}`
+    );
+  }
 
   revalidatePath("/galeria");
   revalidatePath("/admin/dashboard");
