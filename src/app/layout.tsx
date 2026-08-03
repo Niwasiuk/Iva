@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.ivannastylist.com.br"),
   title: "Ivanna Wasiuk do Canto — Personal Stylist",
   description:
     "Consultoria de estilo, imagem e moda. Ivanna Wasiuk do Canto ajuda voce a construir um guarda-roupa que fala por voce.",
