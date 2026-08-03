@@ -77,7 +77,7 @@ export default function LinksPage() {
         <div className="flex flex-col items-center text-center">
           <div className="relative w-24 h-24 rounded-full overflow-hidden border border-cream/20">
             <Image
-              src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=300&auto=format&fit=crop"
+              src="/images/ivanna-hero.png"
               alt="Ivanna Wasiuk do Canto"
               fill
               className="object-cover"

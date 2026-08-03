@@ -51,7 +51,7 @@ export default async function Home() {
           </div>
           <div className="relative aspect-[4/5] w-full max-w-sm mx-auto md:ml-auto border border-cream/20">
             <Image
-              src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=800&auto=format&fit=crop"
+              src="/images/ivanna-hero.png"
               alt="Ivanna Wasiuk do Canto"
               fill
               className="object-cover"
